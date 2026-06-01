@@ -152,6 +152,23 @@
 </div>
 
 <script>
+  function speak(text) {
+    try {
+      if (!('speechSynthesis' in window)) return;
+      if (!('SpeechSynthesisUtterance' in window)) return;
+      window.speechSynthesis.cancel();
+      setTimeout(() => {
+        try {
+          const utter = new SpeechSynthesisUtterance(text);
+          utter.lang = 'id-ID';
+          utter.rate = 0.9;
+          utter.pitch = 1.0;
+          utter.volume = 1.0;
+          window.speechSynthesis.speak(utter);
+        } catch(e) {}
+      }, 150);
+    } catch(e) {}
+  }
   let players = [];
   let ronde = 1;
   let target = 1000;
@@ -238,6 +255,7 @@
       p.stars += 1;
       p.points = 0;
       logs.unshift({ name: p.name, added: delta, before, after: 0, star: true });
+      speak(`Selamat kepada ${p.name}, mendapat bintang ke ${p.stars}!`);
     } else {
       p.points = newTotal;
       logs.unshift({ name: p.name, added: delta, before, after: newTotal, star: false });
@@ -250,6 +268,7 @@
     const before = p.points;
     p.points = 0;
     logs.unshift({ name: p.name, before, after: 0, burned: true });
+    speak(`${p.name} terbakar! Dimulai dari angka nol ya`);
     render();
   }
 
@@ -291,3 +310,4 @@
 </script>
 </body>
 </html>
+          
