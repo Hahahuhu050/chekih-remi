@@ -560,10 +560,11 @@
     if (stats[p.name]) stats[p.name].totalBurn += 1;
     logs.unshift({ name: p.name, before, after: 0, burned: true });
     showToast(`🔥 ${p.name} terbakar! Balik ke 0`);
+    speak(`${p.name} terbakar!`);
     setTimeout(() => {
       const a = document.getElementById('audioNol');
       if (a) { a.currentTime = 0; a.play().catch(()=>{}); }
-    }, 300);
+    }, 900);
     saveSession();
     render();
   }
@@ -746,4 +747,4 @@
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
 </script>
 </body>
-</html>
+</html>        
