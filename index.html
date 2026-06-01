@@ -12,6 +12,7 @@
   <title>Cekih Remi</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; overflow-x: hidden; }
     :root {
       --bg: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
       --card: #1a1a2e; --card2: #16213e; --thead: #0d1b2a;
@@ -177,6 +178,7 @@
     </div>
     <div class="header-btns">
       <button class="btn-secondary" id="btnTheme" onclick="toggleTheme()">🌙</button>
+      <button class="btn-secondary" onclick="toggleFullscreen()" id="btnFs">⛶</button>
       <button class="btn-secondary" onclick="showTab('riwayat')">📋 Riwayat</button>
       <button class="btn-reset" id="btnReset" style="display:none" onclick="confirmReset()">Reset</button>
     </div>
@@ -631,6 +633,21 @@
       return `<div class="${cls}">${txt}</div>`;
     }).join('');
   }
+
+  // ---- FULLSCREEN ----
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(()=>{});
+      document.getElementById('btnFs').textContent = '✕';
+    } else {
+      document.exitFullscreen().catch(()=>{});
+      document.getElementById('btnFs').textContent = '⛶';
+    }
+  }
+  document.addEventListener('fullscreenchange', () => {
+    const btn = document.getElementById('btnFs');
+    if (btn) btn.textContent = document.fullscreenElement ? '✕' : '⛶';
+  });
 
   // ---- THEME ----
   function toggleTheme() {
