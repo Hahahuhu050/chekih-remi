@@ -222,6 +222,7 @@
       <div class="ronde-info">Ronde <span id="rondeNum">1</span></div>
 <div style="display:flex;gap:6px;">
         <button class="btn-secondary" onclick="openEditNama()" style="font-size:12px;padding:7px 10px;">✏️ Edit Nama</button>
+        <button class="btn-secondary" onclick="undo()" style="font-size:12px;padding:7px 10px;">↩️ Undo</button>
         <button class="btn-ronde" onclick="rondeBarу()">🔄 Ronde Baru</button>
       </div>
     </div>
@@ -290,6 +291,7 @@
   let stats = {}; // { name: { totalBurn, totalStars, totalPoints, rounds } }
   let gameStartTime = null;
   let currentTab = 'game';
+  let historyStack = []; // untuk undo
 
   // ---- SPEECH ----
   function speak(text) {
@@ -527,7 +529,25 @@
     document.getElementById(`inp${i}`).value = '';
   }
 
+  function saveSnapshot() {
+    historyStack.push(JSON.parse(JSON.stringify({ players, logs, stats })));
+    if (historyStack.length > 20) historyStack.shift();
+  }
+
+  function undo() {
+    if (!historyStack.length) { showToast('⚠️ Tidak ada yang bisa di-undo'); return; }
+    const snap = historyStack.pop();
+    players = snap.players;
+    logs = snap.logs;
+    stats = snap.stats;
+    saveSession();
+    render();
+    showToast('↩️ Undo berhasil!');
+    speak('Undo!');
+  }
+
   function applyDelta(i, delta) {
+    saveSnapshot();
     const p = players[i];
     const before = p.points;
     const newTotal = p.points + delta;
@@ -554,6 +574,7 @@
   }
 
   function bakar(i) {
+    saveSnapshot();
     const p = players[i];
     const before = p.points;
     p.points = 0;
@@ -747,4 +768,4 @@
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
 </script>
 </body>
-</html>        
+</html>
