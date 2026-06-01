@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8"/>
@@ -12,90 +12,156 @@
   <title>Cekih Remi</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-      font-family: monospace;
-      color: #e0e0e0;
-      min-height: 100vh;
-      padding: 16px;
-      padding-bottom: 40px;
+    :root {
+      --bg: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      --card: #1a1a2e; --card2: #16213e; --thead: #0d1b2a;
+      --border: #333; --text: #e0e0e0; --muted: #aaa; --input-bg: #1a1a2e;
+      --chip-bg: #1a1a2e; --secondary-bg: #1a1a2e;
     }
+    body.light {
+      --bg: linear-gradient(135deg, #f0f4ff, #e8eaf6, #fafafa);
+      --card: #ffffff; --card2: #f5f5f5; --thead: #e8eaf6;
+      --border: #ddd; --text: #1a1a2e; --muted: #666; --input-bg: #f5f5f5;
+      --chip-bg: #e8eaf6; --secondary-bg: #e8eaf6;
+    }
+    body { background: var(--bg); font-family: monospace; color: var(--text); min-height: 100vh; padding: 16px 16px 60px; transition: background 0.3s, color 0.3s; }
     @keyframes spin {
-      0%   { transform: rotate(0deg) scale(1); }
-      25%  { transform: rotate(15deg) scale(1.15); }
-      50%  { transform: rotate(0deg) scale(1); }
-      75%  { transform: rotate(-15deg) scale(1.15); }
-      100% { transform: rotate(0deg) scale(1); }
+      0%,100% { transform: rotate(0deg) scale(1); }
+      25% { transform: rotate(15deg) scale(1.15); }
+      75% { transform: rotate(-15deg) scale(1.15); }
     }
+    @keyframes confettiFall {
+      0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
     #app { max-width: 520px; margin: 0 auto; }
-    .header { display: flex; justify-content: space-between; align-items: center;
-      border-bottom: 2px solid #ffd700; padding-bottom: 10px; margin-bottom: 16px; }
-    .header-left { display: flex; align-items: center; gap: 10px; }
-    .joker { font-size: 36px; animation: spin 3s ease-in-out infinite;
-      display: inline-block; filter: drop-shadow(0 0 8px #ffd700); }
-    .title { font-size: 20px; font-weight: 900; color: #ffd700; letter-spacing: 2px; line-height: 1.1; }
-    .subtitle { font-size: 10px; color: #aaa; letter-spacing: 3px; text-transform: uppercase; margin-top: 2px; }
-    .btn-reset { background: #ff4444; color: #fff; border: none; border-radius: 6px;
-      padding: 6px 14px; cursor: pointer; font-weight: 700; font-size: 13px; }
+    .header { display:flex; justify-content:space-between; align-items:center;
+      border-bottom:2px solid #ffd700; padding-bottom:10px; margin-bottom:16px; }
+    .header-left { display:flex; align-items:center; gap:10px; }
+    .joker { font-size:36px; animation:spin 3s ease-in-out infinite; display:inline-block; filter:drop-shadow(0 0 8px #ffd700); }
+    .title { font-size:20px; font-weight:900; color:#ffd700; letter-spacing:2px; line-height:1.1; }
+    .subtitle { font-size:10px; color:#aaa; letter-spacing:3px; text-transform:uppercase; margin-top:2px; }
+    .header-btns { display:flex; gap:6px; align-items:center; flex-wrap:wrap; justify-content:flex-end; }
+    .btn-reset { background:#ff4444; color:#fff; border:none; border-radius:6px; padding:6px 10px; cursor:pointer; font-weight:700; font-size:12px; }
+    .btn-secondary { background:var(--secondary-bg); color:#ffd700; border:1px solid #ffd700; border-radius:6px; padding:6px 10px; cursor:pointer; font-weight:700; font-size:12px; }
+
+    /* TABS */
+    .tabs { display:flex; gap:4px; margin-bottom:14px; border-bottom:1px solid #333; padding-bottom:8px; overflow-x:auto; }
+    .tab { background:transparent; color:#aaa; border:none; border-radius:6px; padding:7px 12px;
+      cursor:pointer; font-weight:700; font-size:12px; font-family:monospace; white-space:nowrap; }
+    .tab.active { background:#ffd700; color:#1a1a2e; }
 
     /* SETUP */
-    .setup { display: flex; flex-direction: column; gap: 12px; }
-    label { color: #aaa; font-size: 14px; display: block; margin-bottom: 4px; }
-    textarea, input[type=number] {
-      background: #1a1a2e; color: #e0e0e0; border: 1px solid #444;
-      border-radius: 8px; padding: 10px; font-size: 15px; font-family: monospace;
-      width: 100%; resize: vertical;
-    }
-    .btn-start { background: linear-gradient(90deg,#ffd700,#ff8c00); color: #1a1a2e;
-      border: none; border-radius: 8px; padding: 12px; font-size: 16px;
-      font-weight: 900; cursor: pointer; width: 100%; margin-top: 4px; }
+    .setup { display:flex; flex-direction:column; gap:12px; animation:fadeIn 0.3s; }
+    label { color:#aaa; font-size:14px; display:block; margin-bottom:4px; }
+    textarea, .txt-input { background:var(--input-bg); color:var(--text); border:1px solid var(--border);
+      border-radius:8px; padding:10px; font-size:15px; font-family:monospace; width:100%; resize:vertical; }
+    input[type=number] { background:var(--input-bg); color:var(--text); border:1px solid var(--border);
+      border-radius:8px; padding:10px; font-size:15px; font-family:monospace; width:100%; }
+    .btn-start { background:linear-gradient(90deg,#ffd700,#ff8c00); color:#1a1a2e;
+      border:none; border-radius:8px; padding:12px; font-size:16px; font-weight:900; cursor:pointer; width:100%; }
+
+    /* SAVED PLAYERS */
+    .saved-list { display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; }
+    .saved-chip { background:var(--chip-bg); border:1px solid var(--border); border-radius:20px;
+      padding:4px 10px; font-size:12px; cursor:pointer; color:#ffd700; }
+    .saved-chip:hover { border-color:#ffd700; }
 
     /* TABLE */
-    .table { border-radius: 10px; overflow: hidden; border: 1px solid #333; margin-bottom: 10px; }
-    .thead { display: flex; background: #0d1b2a; padding: 8px 12px;
-      font-size: 11px; color: #ffd700; font-weight: 700; text-transform: uppercase; }
-    .row { display: flex; align-items: center; padding: 10px 12px; gap: 8px; }
-    .row:nth-child(even) { background: #1a1a2e; }
-    .row:nth-child(odd)  { background: #16213e; }
-    .col-name  { flex: 2; font-weight: 700; word-break: break-word; }
-    .col-poin  { flex: 1; text-align: center; font-weight: 800; font-size: 18px; }
-    .col-bintang { flex: 1; text-align: center; color: #ffd700; }
-    .col-aksi  { flex: 3; display: flex; flex-direction: column; gap: 4px; }
-    .col-aksi input { background: #0d1b2a; color: #fff; border: 1px solid #555;
-      border-radius: 6px; padding: 5px 8px; font-size: 14px; font-family: monospace; width: 100%; }
-    .btn-row { display: flex; gap: 4px; }
-    .btn-tambah { flex:1; background:#ffd700; color:#1a1a2e; border:none; border-radius:6px;
-      padding:6px 4px; font-weight:900; font-size:12px; cursor:pointer; }
-    .btn-kurang { flex:1; background:#4fc3f7; color:#1a1a2e; border:none; border-radius:6px;
-      padding:6px 4px; font-weight:900; font-size:12px; cursor:pointer; }
-    .btn-bakar { background:#ff4444; color:#fff; border:none; border-radius:6px;
-      padding:6px; font-weight:900; font-size:12px; cursor:pointer; width:100%; }
+    .table { border-radius:10px; overflow:hidden; border:1px solid #333; margin-bottom:10px; }
+    .thead { display:flex; background:var(--thead); padding:8px 12px;
+      font-size:11px; color:#ffd700; font-weight:700; text-transform:uppercase; }
+    .row { display:flex; align-items:center; padding:10px 12px; gap:8px; }
+    .row:nth-child(even) { background:var(--card); }
+    .row:nth-child(odd)  { background:var(--card2); }
+    .col-name { flex:2; font-weight:700; word-break:break-word; }
+    .col-poin { flex:1; text-align:center; font-weight:800; font-size:18px; }
+    .col-bintang { flex:1; text-align:center; }
+    .col-aksi { flex:3; display:flex; flex-direction:column; gap:4px; }
+    .col-aksi input { background:var(--thead); color:var(--text); border:1px solid var(--border);
+      border-radius:6px; padding:5px 8px; font-size:14px; font-family:monospace; width:100%; }
+    .btn-row { display:flex; gap:4px; }
+    .btn-tambah { flex:1; background:#ffd700; color:#1a1a2e; border:none; border-radius:6px; padding:6px 4px; font-weight:900; font-size:12px; cursor:pointer; }
+    .btn-kurang { flex:1; background:#4fc3f7; color:#1a1a2e; border:none; border-radius:6px; padding:6px 4px; font-weight:900; font-size:12px; cursor:pointer; }
+    .btn-bakar { background:#ff4444; color:#fff; border:none; border-radius:6px; padding:6px; font-weight:900; font-size:12px; cursor:pointer; width:100%; }
 
     /* RONDE */
-    .ronde-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-    .ronde-info { font-size: 12px; color: #aaa; }
-    .ronde-info span { color: #ffd700; font-weight: 900; }
-    .btn-ronde { background: linear-gradient(90deg,#302b63,#4fc3f7); color:#fff; border:none;
+    .ronde-bar { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+    .ronde-info { font-size:12px; color:#aaa; }
+    .ronde-info span { color:#ffd700; font-weight:900; }
+    .btn-ronde { background:linear-gradient(90deg,#302b63,#4fc3f7); color:#fff; border:none;
       border-radius:6px; padding:7px 14px; font-weight:900; font-size:12px; cursor:pointer; }
-    .rule { font-size: 11px; color: #666; text-align: center; margin-bottom: 10px; }
+    .rule { font-size:11px; color:#666; text-align:center; margin-bottom:10px; }
 
     /* LOG */
-    .log-box { background: #0d1b2a; border-radius: 8px; padding: 10px 14px; border: 1px solid #333; }
-    .log-title { font-size: 12px; color: #ffd700; font-weight: 700; margin-bottom: 4px; }
-    .log-row { font-size: 12px; padding: 2px 0; }
-    .log-star   { color: #ffd700; }
-    .log-burned { color: #ff6b6b; }
-    .log-minus  { color: #4fc3f7; }
-    .log-normal { color: #aaa; }
+    .log-box { background:var(--thead); border-radius:8px; padding:10px 14px; border:1px solid #333; margin-bottom:10px; }
+    .log-title { font-size:12px; color:#ffd700; font-weight:700; margin-bottom:4px; }
+    .log-row { font-size:12px; padding:2px 0; }
 
-    /* INSTALL BANNER */
-    #install-banner { display:none; position:fixed; bottom:0; left:0; right:0;
-      background:#1a1a2e; border-top:2px solid #ffd700; padding:12px 16px;
-      display:flex; justify-content:space-between; align-items:center; gap:10px; z-index:999; }
-    #install-banner p { font-size:13px; color:#e0e0e0; flex:1; }
-    #install-banner button { background:linear-gradient(90deg,#ffd700,#ff8c00); color:#1a1a2e;
-      border:none; border-radius:6px; padding:8px 14px; font-weight:900; cursor:pointer; white-space:nowrap; }
-    #install-banner .close-btn { background:transparent; color:#aaa; border:none; font-size:18px; cursor:pointer; padding:0 4px; }
+    /* PAPAN SKOR */
+    .skor-box { background:var(--card); border-radius:10px; border:1px solid #333; overflow:hidden; margin-bottom:10px; animation:fadeIn 0.3s; }
+    .skor-header { background:var(--thead); padding:10px 14px; font-size:13px; color:#ffd700; font-weight:900; }
+    .skor-row { display:flex; align-items:center; padding:10px 14px; gap:10px; border-bottom:1px solid #222; }
+    .skor-rank { font-size:20px; width:30px; text-align:center; }
+    .skor-name { flex:1; font-weight:700; }
+    .skor-stars { color:#ffd700; font-size:14px; }
+    .skor-stat { font-size:11px; color:#888; }
+
+    /* STATISTIK */
+    .stat-box { background:var(--card); border-radius:10px; border:1px solid #333; overflow:hidden; margin-bottom:10px; animation:fadeIn 0.3s; }
+    .stat-header { background:var(--thead); padding:10px 14px; font-size:13px; color:#ffd700; font-weight:900; }
+    .stat-row { display:flex; justify-content:space-between; align-items:center; padding:8px 14px; border-bottom:1px solid #222; font-size:13px; }
+    .stat-label { color:#aaa; }
+    .stat-value { color:#ffd700; font-weight:700; }
+
+    /* RIWAYAT */
+    .riwayat-item { background:var(--card); border-radius:8px; border:1px solid #333; padding:12px; margin-bottom:8px; animation:fadeIn 0.3s; cursor:pointer; }
+    .riwayat-item:hover { border-color:#ffd700; }
+    .riwayat-date { font-size:11px; color:#666; margin-bottom:4px; }
+    .riwayat-players { font-size:13px; color:#e0e0e0; font-weight:700; }
+    .riwayat-detail { font-size:11px; color:#aaa; margin-top:4px; }
+    .empty-state { text-align:center; color:#555; padding:30px; font-size:14px; }
+
+    /* CONFETTI */
+    .confetti-piece { position:fixed; width:10px; height:10px; top:0; border-radius:2px;
+      animation:confettiFall 2.5s ease-in forwards; pointer-events:none; z-index:9999; }
+
+    /* CARD ANIMATION */
+    @keyframes cardFloat {
+      0% { transform: translateY(0) rotate(0deg) scale(1); opacity:1; }
+      50% { transform: translateY(-60px) rotate(15deg) scale(1.3); opacity:0.9; }
+      100% { transform: translateY(-120px) rotate(30deg) scale(0.5); opacity:0; }
+    }
+    .card-fly { position:fixed; font-size:28px; pointer-events:none; z-index:9998;
+      animation: cardFloat 0.8s ease-out forwards; }
+
+    /* EDIT NAME */
+    .edit-name-input { background:var(--input-bg); color:var(--text); border:1px solid #ffd700;
+      border-radius:6px; padding:4px 6px; font-size:13px; font-family:monospace; width:100%; }
+
+    /* SCREENSHOT */
+    .skor-screenshot { background:var(--card); border-radius:12px; padding:14px; border:2px solid #ffd700; }
+
+    /* TOAST */
+    .toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
+      background:#1a1a2e; border:1px solid #ffd700; border-radius:8px; padding:10px 18px;
+      font-size:13px; color:#ffd700; font-weight:700; z-index:9999; animation:fadeIn 0.3s;
+      pointer-events:none; white-space:nowrap; box-shadow:0 4px 20px #00000088; }
+    body.light .toast { background:#fff; }
+
+    /* GELAR */
+    .gelar-badge { font-size:10px; background:#302b63; color:#ffd700; border-radius:10px;
+      padding:2px 6px; margin-top:2px; display:inline-block; }
+    body.light .gelar-badge { background:#e8eaf6; }
+
+    /* MODAL */
+    .modal-overlay { position:fixed; inset:0; background:#000000cc; z-index:1000; display:flex; align-items:center; justify-content:center; padding:16px; }
+    .modal { background:var(--card); border:1px solid #ffd700; border-radius:12px; padding:20px; width:100%; max-width:400px; max-height:80vh; overflow-y:auto; }
+    .modal h3 { color:#ffd700; margin-bottom:12px; font-size:16px; }
+    .modal-btns { display:flex; gap:8px; margin-top:14px; }
+    .btn-confirm { flex:1; background:#ffd700; color:#1a1a2e; border:none; border-radius:6px; padding:10px; font-weight:900; cursor:pointer; }
+    .btn-cancel { flex:1; background:#333; color:#fff; border:none; border-radius:6px; padding:10px; font-weight:900; cursor:pointer; }
   </style>
 </head>
 <body>
@@ -109,13 +175,30 @@
         <div class="subtitle">by yoga sadewa</div>
       </div>
     </div>
-    <button class="btn-reset" id="btnReset" style="display:none" onclick="resetGame()">Reset</button>
+    <div class="header-btns">
+      <button class="btn-secondary" id="btnTheme" onclick="toggleTheme()">🌙</button>
+      <button class="btn-secondary" onclick="showTab('riwayat')">📋 Riwayat</button>
+      <button class="btn-reset" id="btnReset" style="display:none" onclick="confirmReset()">Reset</button>
+    </div>
   </div>
-  <div id="setup">
+
+  <div id="tabsBar" style="display:none">
+    <div class="tabs">
+      <button class="tab active" onclick="showTab('game')" id="tab-game">🎮 Game</button>
+      <button class="tab" onclick="showTab('skor')" id="tab-skor">🏆 Skor</button>
+      <button class="tab" onclick="showTab('statistik')" id="tab-statistik">📊 Statistik</button>
+    </div>
+  </div>
+
+  <div id="view-setup">
     <div class="setup">
       <div>
         <label>Nama pemain (pisah koma / enter):</label>
         <textarea id="nameList" rows="4" placeholder="Budi, Sari&#10;Anton&#10;Dewi"></textarea>
+      </div>
+      <div id="savedPlayersBox" style="display:none">
+        <label>Pemain tersimpan:</label>
+        <div class="saved-list" id="savedPlayersList"></div>
       </div>
       <div>
         <label>Target poin bintang:</label>
@@ -124,7 +207,8 @@
       <button class="btn-start" onclick="startGame()">Mulai 🎴</button>
     </div>
   </div>
-  <div id="game" style="display:none">
+
+  <div id="view-game" style="display:none">
     <div class="table">
       <div class="thead">
         <span style="flex:2">Nama</span>
@@ -136,7 +220,10 @@
     </div>
     <div class="ronde-bar">
       <div class="ronde-info">Ronde <span id="rondeNum">1</span></div>
-      <button class="btn-ronde" onclick="rondeBarу()">🔄 Ronde Baru</button>
+<div style="display:flex;gap:6px;">
+        <button class="btn-secondary" onclick="openEditNama()" style="font-size:12px;padding:7px 10px;">✏️ Edit Nama</button>
+        <button class="btn-ronde" onclick="rondeBarу()">🔄 Ronde Baru</button>
+      </div>
     </div>
     <div class="rule" id="ruleText"></div>
     <div class="log-box" id="logBox" style="display:none">
@@ -144,66 +231,259 @@
       <div id="logRows"></div>
     </div>
   </div>
+
+  <div id="view-skor" style="display:none">
+    <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">
+      <button class="btn-secondary" onclick="screenshotSkor()" style="font-size:12px;">📸 Screenshot</button>
+    </div>
+    <div class="skor-box" id="skorBoxCapture">
+      <div class="skor-header">🏆 Papan Skor</div>
+      <div id="skorRows"></div>
+    </div>
+  </div>
+
+  <div id="view-statistik" style="display:none">
+    <div class="stat-box">
+      <div class="stat-header">📊 Statistik Game Ini</div>
+      <div id="statRows"></div>
+    </div>
+  </div>
+
+  <div id="view-riwayat" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <span style="font-size:14px;color:#ffd700;font-weight:900;">📋 Riwayat Game</span>
+      <button class="btn-secondary" onclick="showTab('game')" id="btnBackToGame" style="display:none">← Kembali</button>
+    </div>
+    <div id="riwayatList"></div>
+  </div>
 </div>
 
-<div id="install-banner" style="display:none">
-  <p>📲 Install Cekih Remi di HP kamu!</p>
-  <button onclick="installApp()">Install</button>
-  <button class="close-btn" onclick="document.getElementById('install-banner').style.display='none'">✕</button>
+<!-- Modal Edit Nama -->
+<div class="modal-overlay" id="modalEditNama" style="display:none">
+  <div class="modal">
+    <h3>✏️ Edit Nama Pemain</h3>
+    <div id="editNamaList" style="display:flex;flex-direction:column;gap:8px;margin-bottom:4px;"></div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="document.getElementById('modalEditNama').style.display='none'">Batal</button>
+      <button class="btn-confirm" onclick="saveEditNama()">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Konfirmasi Reset -->
+<div class="modal-overlay" id="modalReset" style="display:none">
+  <div class="modal">
+    <h3>⚠️ Reset Game?</h3>
+    <p style="color:#aaa;font-size:13px;">Game saat ini akan disimpan ke riwayat. Yakin mau reset?</p>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="document.getElementById('modalReset').style.display='none'">Batal</button>
+      <button class="btn-confirm" onclick="doReset()">Ya, Reset</button>
+    </div>
+  </div>
 </div>
 
 <script>
-  function speak(text) {
-    try {
-      if (!('speechSynthesis' in window)) return;
-      if (!('SpeechSynthesisUtterance' in window)) return;
-      window.speechSynthesis.cancel();
-      setTimeout(() => {
-        try {
-          const utter = new SpeechSynthesisUtterance(text);
-          utter.lang = 'id-ID';
-          utter.rate = 0.9;
-          utter.pitch = 1.0;
-          utter.volume = 1.0;
-          window.speechSynthesis.speak(utter);
-        } catch(e) {}
-      }, 150);
-    } catch(e) {}
-  }
   let players = [];
   let ronde = 1;
   let target = 1000;
   let logs = [];
-  let deferredPrompt = null;
+  let stats = {}; // { name: { totalBurn, totalStars, totalPoints, rounds } }
+  let gameStartTime = null;
+  let currentTab = 'game';
 
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    document.getElementById('install-banner').style.display = 'flex';
-  });
+  // ---- SPEECH ----
+  function speak(text) {
+    try {
+      if (!window.speechSynthesis) return;
+      window.speechSynthesis.cancel();
+      setTimeout(() => {
+        try {
+          const u = new SpeechSynthesisUtterance(text);
+          const voices = window.speechSynthesis.getVoices();
+          const id = voices.find(v => v.lang && v.lang.startsWith('id'));
+          if (id) u.voice = id;
+          u.lang = 'id-ID'; u.rate = 0.9; u.pitch = 1.0; u.volume = 1.0;
+          window.speechSynthesis.speak(u);
+        } catch(e) {}
+      }, 150);
+    } catch(e) {}
+  }
+  if (window.speechSynthesis) {
+    window.speechSynthesis.getVoices();
+    window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+  }
 
-  function installApp() {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      deferredPrompt.userChoice.then(() => {
-        deferredPrompt = null;
-        document.getElementById('install-banner').style.display = 'none';
-      });
+  // ---- TABS ----
+  function showTab(tab) {
+    currentTab = tab;
+    ['game','skor','statistik','riwayat'].forEach(t => {
+      const v = document.getElementById(`view-${t}`);
+      const tb = document.getElementById(`tab-${t}`);
+      if (v) v.style.display = t === tab ? 'block' : 'none';
+      if (tb) tb.classList.toggle('active', t === tab);
+    });
+    if (tab === 'skor') renderSkor();
+    if (tab === 'statistik') renderStatistik();
+    if (tab === 'riwayat') renderRiwayat();
+    const backBtn = document.getElementById('btnBackToGame');
+    if (backBtn) backBtn.style.display = players.length && tab === 'riwayat' ? 'block' : 'none';
+  }
+
+  // ---- SAVED PLAYERS ----
+  function getSavedPlayers() {
+    try { return JSON.parse(localStorage.getItem('savedPlayers') || '[]'); } catch(e) { return []; }
+  }
+  function savePlayerNames(names) {
+    try {
+      let saved = getSavedPlayers();
+      names.forEach(n => { if (!saved.includes(n)) saved.push(n); });
+      localStorage.setItem('savedPlayers', JSON.stringify(saved));
+    } catch(e) {}
+  }
+  function renderSavedPlayers() {
+    const saved = getSavedPlayers();
+    const box = document.getElementById('savedPlayersBox');
+    const list = document.getElementById('savedPlayersList');
+    if (!saved.length) { box.style.display = 'none'; return; }
+    box.style.display = 'block';
+    list.innerHTML = saved.map(n =>
+      `<span class="saved-chip" onclick="addSavedPlayer('${n}')">${n}</span>`
+    ).join('');
+  }
+  function addSavedPlayer(name) {
+    const ta = document.getElementById('nameList');
+    const cur = ta.value.trim();
+    ta.value = cur ? cur + ', ' + name : name;
+  }
+
+  // ---- RIWAYAT ----
+  function getHistory() {
+    try { return JSON.parse(localStorage.getItem('gameHistory') || '[]'); } catch(e) { return []; }
+  }
+  function saveToHistory() {
+    if (!players.length) return;
+    const history = getHistory();
+    const record = {
+      date: new Date().toLocaleString('id-ID'),
+      target,
+      ronde,
+      players: players.map(p => ({ ...p, ...stats[p.name] }))
+    };
+    history.unshift(record);
+    if (history.length > 20) history.pop();
+    try { localStorage.setItem('gameHistory', JSON.stringify(history)); } catch(e) {}
+  }
+  function renderRiwayat() {
+    const history = getHistory();
+    const el = document.getElementById('riwayatList');
+    if (!history.length) {
+      el.innerHTML = '<div class="empty-state">📭 Belum ada riwayat game</div>';
+      return;
+    }
+    el.innerHTML = history.map((h, i) => {
+      const sorted = [...h.players].sort((a,b) => b.stars - a.stars);
+      const winner = sorted[0];
+      return `<div class="riwayat-item">
+        <div class="riwayat-date">🕐 ${h.date}</div>
+        <div class="riwayat-players">${h.players.map(p=>p.name).join(', ')}</div>
+        <div class="riwayat-detail">
+          🏆 ${winner.name} (${winner.stars}★) &nbsp;|&nbsp; Target: ${h.target} &nbsp;|&nbsp; ${h.ronde} ronde
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // ---- SESI ----
+  function saveSession() {
+    try {
+      localStorage.setItem('session', JSON.stringify({ players, ronde, target, logs, stats, gameStartTime }));
+    } catch(e) {}
+  }
+  function loadSession() {
+    try {
+      const s = JSON.parse(localStorage.getItem('session'));
+      if (s && s.players && s.players.length) {
+        players = s.players; ronde = s.ronde; target = s.target;
+        logs = s.logs || []; stats = s.stats || {}; gameStartTime = s.gameStartTime;
+        return true;
+      }
+    } catch(e) {}
+    return false;
+  }
+  function clearSession() {
+    try { localStorage.removeItem('session'); } catch(e) {}
+  }
+
+  // ---- STATS ----
+  function initStats() {
+    stats = {};
+    players.forEach(p => { stats[p.name] = { totalBurn: 0, totalStars: 0, maxPoints: 0 }; });
+  }
+  function renderSkor() {
+    const sorted = [...players].sort((a,b) => b.stars - a.stars || b.points - a.points);
+    const medals = ['🥇','🥈','🥉'];
+    document.getElementById('skorRows').innerHTML = sorted.map((p,i) => `
+      <div class="skor-row">
+        <div class="skor-rank">${medals[i] || (i+1)}</div>
+        <div class="skor-name">${p.name}</div>
+        <div>
+          <div class="skor-stars">${p.stars > 0 ? (p.stars<=5?'★'.repeat(p.stars):`★x${p.stars}`) : '-'}</div>
+          <div class="skor-stat">${p.points} poin</div>
+        </div>
+      </div>`).join('');
+  }
+  function renderStatistik() {
+    const el = document.getElementById('statRows');
+    if (!players.length) { el.innerHTML = '<div class="empty-state">Mulai game dulu</div>'; return; }
+    const mostBurned = players.reduce((a,b) => (stats[a.name]?.totalBurn||0) > (stats[b.name]?.totalBurn||0) ? a : b);
+    const mostStars = players.reduce((a,b) => a.stars > b.stars ? a : b);
+    const highestPts = players.reduce((a,b) => (stats[a.name]?.maxPoints||0) > (stats[b.name]?.maxPoints||0) ? a : b);
+    el.innerHTML = `
+      <div class="stat-row"><span class="stat-label">🔥 Paling sering terbakar</span><span class="stat-value">${mostBurned.name} (${stats[mostBurned.name]?.totalBurn||0}x)</span></div>
+      <div class="stat-row"><span class="stat-label">⭐ Bintang terbanyak</span><span class="stat-value">${mostStars.name} (${mostStars.stars}★)</span></div>
+      <div class="stat-row"><span class="stat-label">📈 Poin tertinggi dicapai</span><span class="stat-value">${highestPts.name} (${stats[highestPts.name]?.maxPoints||0})</span></div>
+      <div class="stat-row"><span class="stat-label">🔄 Total ronde</span><span class="stat-value">${ronde}</span></div>
+      ${players.map(p=>`
+        <div class="stat-row">
+          <span class="stat-label">${p.name}</span>
+          <span class="stat-value">${p.stars}★ | bakar:${stats[p.name]?.totalBurn||0}x</span>
+        </div>`).join('')}`;
+  }
+
+  // ---- CONFETTI ----
+  function launchConfetti() {
+    const colors = ['#ffd700','#ff4444','#4fc3f7','#4caf50','#ff8c00','#e040fb'];
+    for (let i = 0; i < 60; i++) {
+      setTimeout(() => {
+        const el = document.createElement('div');
+        el.className = 'confetti-piece';
+        el.style.left = Math.random() * 100 + 'vw';
+        el.style.background = colors[Math.floor(Math.random()*colors.length)];
+        el.style.animationDuration = (1.5 + Math.random()) + 's';
+        el.style.animationDelay = Math.random() * 0.5 + 's';
+        el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 3000);
+      }, i * 30);
     }
   }
 
+  // ---- GAME ----
   function startGame() {
     const raw = document.getElementById('nameList').value;
     const names = raw.split(/[\n,]+/).map(n => n.trim()).filter(Boolean);
     if (!names.length) return;
     target = parseInt(document.getElementById('targetInput').value) || 1000;
     players = names.map(name => ({ name, points: 0, stars: 0 }));
-    ronde = 1;
-    logs = [];
-    document.getElementById('setup').style.display = 'none';
-    document.getElementById('game').style.display = 'block';
+    ronde = 1; logs = []; gameStartTime = Date.now();
+    savePlayerNames(names);
+    initStats();
+    document.getElementById('view-setup').style.display = 'none';
+    document.getElementById('view-game').style.display = 'block';
+    document.getElementById('tabsBar').style.display = 'block';
     document.getElementById('btnReset').style.display = 'block';
-    document.getElementById('ruleText').textContent = `Target ${target} poin = bintang balik ke 0 | Minus = aman | Bakar = langsung 0`;
+    document.getElementById('ruleText').textContent = `Target ${target} poin = bintang balik ke 0 | Minus = aman`;
+    saveSession();
     render();
   }
 
@@ -213,18 +493,18 @@
     container.innerHTML = '';
     players.forEach((p, i) => {
       const poinColor = p.points < 0 ? '#4fc3f7' : p.points === 0 ? '#888' : '#ffd700';
-      const stars = p.stars > 0 ? (p.stars <= 5 ? '★'.repeat(p.stars) : `★x${p.stars}`) : '-';
-      const starColor = p.stars > 0 ? '#ffd700' : '#555';
+      const stars = p.stars > 0 ? (p.stars<=5?'★'.repeat(p.stars):`★x${p.stars}`) : '-';
       const div = document.createElement('div');
       div.className = 'row';
+      const gelar = getGelar(p.name);
       div.innerHTML = `
-        <div class="col-name">${p.name}</div>
+        <div class="col-name">${p.name}${gelar ? `<br><span class="gelar-badge">${gelar}</span>` : ''}</div>
         <div class="col-poin" style="color:${poinColor}">${p.points}</div>
-        <div class="col-bintang" style="color:${starColor}">${stars}</div>
+        <div class="col-bintang" style="color:${p.stars>0?'#ffd700':'#555'}">${stars}</div>
         <div class="col-aksi">
           <input type="number" id="inp${i}" placeholder="poin" onkeydown="if(event.key==='Enter') tambah(${i})"/>
           <div class="btn-row">
-            <button class="btn-tambah" onclick="tambah(${i})">+ Tambah</button>
+            <button class="btn-tambah" onclick="flyCard(this);tambah(${i})">+ Tambah</button>
             <button class="btn-kurang" onclick="kurang(${i})">- Kurang</button>
           </div>
           <button class="btn-bakar" onclick="bakar(${i})">🔥 Bakar</button>
@@ -236,14 +516,13 @@
 
   function tambah(i) {
     const raw = parseInt(document.getElementById(`inp${i}`).value || '0');
-    if (!raw || raw === 0) return;
+    if (!raw) return;
     applyDelta(i, Math.abs(raw));
     document.getElementById(`inp${i}`).value = '';
   }
-
   function kurang(i) {
     const raw = parseInt(document.getElementById(`inp${i}`).value || '0');
-    if (!raw || raw === 0) return;
+    if (!raw) return;
     applyDelta(i, -Math.abs(raw));
     document.getElementById(`inp${i}`).value = '';
   }
@@ -255,12 +534,22 @@
     if (newTotal >= target) {
       p.stars += 1;
       p.points = 0;
+      if (stats[p.name]) stats[p.name].totalStars += 1;
       logs.unshift({ name: p.name, added: delta, before, after: 0, star: true });
+      launchConfetti();
       speak(`Selamat kepada ${p.name}, mendapat bintang ke ${p.stars}!`);
+      showToast(`⭐ ${p.name} dapat bintang ke-${p.stars}!`);
     } else {
       p.points = newTotal;
+      if (stats[p.name]) stats[p.name].maxPoints = Math.max(stats[p.name].maxPoints, newTotal);
       logs.unshift({ name: p.name, added: delta, before, after: newTotal, star: false });
+      if (newTotal < 0) {
+        speak(`${p.name}, minus ${Math.abs(newTotal)} poin`);
+      } else {
+        speak(`${p.name}, ${newTotal} poin`);
+      }
     }
+    saveSession();
     render();
   }
 
@@ -268,12 +557,14 @@
     const p = players[i];
     const before = p.points;
     p.points = 0;
+    if (stats[p.name]) stats[p.name].totalBurn += 1;
     logs.unshift({ name: p.name, before, after: 0, burned: true });
-    speak(`${p.name} terbakar!`);
-      setTimeout(() => {
-        const a = document.getElementById('audioNol');
-        if (a) { a.currentTime = 0; a.play(); }
-      }, 800);
+    showToast(`🔥 ${p.name} terbakar! Balik ke 0`);
+    setTimeout(() => {
+      const a = document.getElementById('audioNol');
+      if (a) { a.currentTime = 0; a.play().catch(()=>{}); }
+    }, 300);
+    saveSession();
     render();
   }
 
@@ -281,37 +572,178 @@
     ronde++;
     players = players.map(p => ({ ...p, points: 0 }));
     logs = [];
+    saveSession();
     render();
+    speak(`Ronde ${ronde} dimulai!`);
   }
 
-  function resetGame() {
-    players = [];
-    ronde = 1;
-    logs = [];
-    document.getElementById('setup').style.display = 'block';
-    document.getElementById('game').style.display = 'none';
+  function confirmReset() {
+    document.getElementById('modalReset').style.display = 'flex';
+  }
+  function doReset() {
+    document.getElementById('modalReset').style.display = 'none';
+    saveToHistory();
+    clearSession();
+    players = []; ronde = 1; logs = []; stats = {};
+    document.getElementById('view-setup').style.display = 'block';
+    document.getElementById('view-game').style.display = 'none';
+    document.getElementById('view-skor').style.display = 'none';
+    document.getElementById('view-statistik').style.display = 'none';
+    document.getElementById('tabsBar').style.display = 'none';
     document.getElementById('btnReset').style.display = 'none';
     document.getElementById('nameList').value = '';
     document.getElementById('targetInput').value = '1000';
+    currentTab = 'game';
+    renderSavedPlayers();
   }
 
   function renderLog() {
-    if (!logs.length) { document.getElementById('logBox').style.display = 'none'; return; }
+    if (!logs.length) { document.getElementById('logBox').style.display='none'; return; }
     document.getElementById('logBox').style.display = 'block';
-    const container = document.getElementById('logRows');
-    container.innerHTML = logs.slice(0, 10).map(l => {
+    document.getElementById('logRows').innerHTML = logs.slice(0,10).map(l => {
       let cls, txt;
-      if (l.star) { cls = 'log-star'; txt = `★ ${l.name}: ${l.before} +${l.added} → BINTANG! balik ke 0`; }
-      else if (l.burned) { cls = 'log-burned'; txt = `🔥 ${l.name} TERBAKAR! ${l.before} → 0`; }
-      else if (l.added < 0) { cls = 'log-minus'; txt = `${l.name}: ${l.before} ${l.added} → ${l.after}`; }
-      else { cls = 'log-normal'; txt = `${l.name}: ${l.before} +${l.added} → ${l.after}`; }
-      return `<div class="log-row ${cls}">${txt}</div>`;
+      if (l.star) { cls='log-row'; txt=`<span style="color:#ffd700">★ ${l.name}: ${l.before} +${l.added} → BINTANG! balik ke 0</span>`; }
+      else if (l.burned) { cls='log-row'; txt=`<span style="color:#ff6b6b">🔥 ${l.name} TERBAKAR! ${l.before} → 0</span>`; }
+      else if (l.added < 0) { cls='log-row'; txt=`<span style="color:#4fc3f7">${l.name}: ${l.before} ${l.added} → ${l.after}</span>`; }
+      else { cls='log-row'; txt=`<span style="color:#aaa">${l.name}: ${l.before} +${l.added} → ${l.after}</span>`; }
+      return `<div class="${cls}">${txt}</div>`;
     }).join('');
   }
 
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js');
+  // ---- THEME ----
+  function toggleTheme() {
+    const isLight = document.body.classList.toggle('light');
+    document.getElementById('btnTheme').textContent = isLight ? '☀️' : '🌙';
+    try { localStorage.setItem('theme', isLight ? 'light' : 'dark'); } catch(e) {}
   }
+  function loadTheme() {
+    try {
+      const t = localStorage.getItem('theme');
+      if (t === 'light') { document.body.classList.add('light'); document.getElementById('btnTheme').textContent = '☀️'; }
+    } catch(e) {}
+  }
+
+  // ---- TOAST NOTIF ----
+  function showToast(msg) {
+    const old = document.querySelector('.toast');
+    if (old) old.remove();
+    const t = document.createElement('div');
+    t.className = 'toast';
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 3000);
+  }
+
+  // ---- GELAR ----
+  function getGelar(name) {
+    const s = stats[name] || {};
+    const p = players.find(x => x.name === name);
+    if (!p) return '';
+    const burns = s.totalBurn || 0;
+    const stars = p.stars || 0;
+    const maxP = players.reduce((a,b) => a.points > b.points ? a : b);
+    const mostBurn = players.reduce((a,b) => (stats[a.name]?.totalBurn||0) > (stats[b.name]?.totalBurn||0) ? a : b);
+    if (stars >= 3) return '👑 Raja Kartu';
+    if (stars >= 1 && burns === 0) return '🧊 Anti Terbakar';
+    if (mostBurn.name === name && burns >= 2) return '😈 Si Paling Apes';
+    if (maxP.name === name && p.points > 0) return '🚀 Terdepan';
+    if (burns >= 3) return '🔥 Langganan Bakar';
+    if (stars === 1) return '⭐ Bintang Baru';
+    return '';
+  }
+
+  // ---- CARD ANIMATION ----
+  function flyCard(btnEl) {
+    try {
+      const rect = btnEl.getBoundingClientRect();
+      const suits = ['🃏','🂠','🂡','🂢'];
+      const el = document.createElement('div');
+      el.className = 'card-fly';
+      el.textContent = suits[Math.floor(Math.random()*suits.length)];
+      el.style.left = rect.left + rect.width/2 - 14 + 'px';
+      el.style.top = rect.top + 'px';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 900);
+    } catch(e) {}
+  }
+
+  // ---- EDIT NAMA ----
+  function openEditNama() {
+    const list = document.getElementById('editNamaList');
+    list.innerHTML = players.map((p,i) => `
+      <div>
+        <label style="font-size:12px;color:var(--muted)">Pemain ${i+1}</label>
+        <input class="edit-name-input" id="editName${i}" value="${p.name}" placeholder="${p.name}"/>
+      </div>`).join('');
+    document.getElementById('modalEditNama').style.display = 'flex';
+  }
+  function saveEditNama() {
+    players.forEach((p,i) => {
+      const inp = document.getElementById(`editName${i}`);
+      if (inp && inp.value.trim()) {
+        const newName = inp.value.trim();
+        if (newName !== p.name) {
+          if (stats[p.name]) { stats[newName] = stats[p.name]; delete stats[p.name]; }
+          p.name = newName;
+        }
+      }
+    });
+    document.getElementById('modalEditNama').style.display = 'none';
+    saveSession();
+    render();
+    showToast('✅ Nama pemain diperbarui!');
+  }
+
+  // ---- SCREENSHOT SKOR ----
+  function screenshotSkor() {
+    const el = document.getElementById('skorBoxCapture');
+    if (!el) return;
+    import('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js')
+      .catch(() => {
+        // fallback: load via script tag
+        const s = document.createElement('script');
+        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+        s.onload = () => doScreenshot(el);
+        document.head.appendChild(s);
+      });
+    if (window.html2canvas) doScreenshot(el);
+  }
+  function doScreenshot(el) {
+    if (!window.html2canvas) { showToast('⏳ Tunggu sebentar...'); setTimeout(()=>doScreenshot(el),1000); return; }
+    html2canvas(el, { backgroundColor: null, scale: 2 }).then(canvas => {
+      const link = document.createElement('a');
+      link.download = 'cekih-remi-skor.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      showToast('📸 Screenshot tersimpan!');
+    });
+  }
+
+  // Preload html2canvas
+  window.addEventListener('load', () => {
+    const s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+    document.head.appendChild(s);
+  });
+
+  // ---- INIT ----
+  window.addEventListener('load', () => {
+    loadTheme();
+    renderSavedPlayers();
+    if (loadSession()) {
+      document.getElementById('view-setup').style.display = 'none';
+      document.getElementById('view-game').style.display = 'block';
+      document.getElementById('tabsBar').style.display = 'block';
+      document.getElementById('btnReset').style.display = 'block';
+      document.getElementById('ruleText').textContent = `Target ${target} poin = bintang balik ke 0 | Minus = aman`;
+      render();
+    } else {
+      showTab('game');
+      document.getElementById('view-setup').style.display = 'block';
+    }
+  });
+
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
 </script>
 </body>
-</html>        
+</html>
