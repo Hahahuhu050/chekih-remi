@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8"/>
@@ -99,6 +99,7 @@
   </style>
 </head>
 <body>
+<audio id="audioNol" src="nol.mp3" preload="auto"></audio>
 <div id="app">
   <div class="header">
     <div class="header-left">
@@ -268,7 +269,11 @@
     const before = p.points;
     p.points = 0;
     logs.unshift({ name: p.name, before, after: 0, burned: true });
-    speak(`${p.name} terbakar! Dimulai dari angka nol ya`);
+    speak(`${p.name} terbakar!`);
+      setTimeout(() => {
+        const a = document.getElementById('audioNol');
+        if (a) { a.currentTime = 0; a.play(); }
+      }, 800);
     render();
   }
 
@@ -309,5 +314,4 @@
   }
 </script>
 </body>
-</html>
-          
+</html>        
